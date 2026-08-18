@@ -27,7 +27,7 @@ export default function Home() {
     setIcons(prev => prev.map((v, j) => j === i ? url : v))
   }
 
-  const handleTap = (key, onQuad, onSingle) => {
+  const handleTap = (key, onQuad) => {
     tapCount.current[key] = (tapCount.current[key] || 0) + 1
     clearTimeout(tapTimers.current[key])
     if (tapCount.current[key] >= 4) {
@@ -35,7 +35,6 @@ export default function Home() {
       onQuad()
     } else {
       tapTimers.current[key] = setTimeout(() => {
-        if (tapCount.current[key] === 1) onSingle?.()
         tapCount.current[key] = 0
       }, 400)
     }
@@ -46,8 +45,6 @@ export default function Home() {
     { label: '流水账', emoji: '📋' },
     { label: '设置', emoji: '⚙️' },
   ]
-
-  const iconSize = '68px'
 
   return (
     <main style={{
@@ -80,7 +77,7 @@ export default function Home() {
           border: '0.5px solid rgba(255,255,255,0.12)',
         }}>
           <div
-            onClick={() => handleTap('cover', () => coverRef.current.click(), null)}
+            onClick={() => handleTap('cover', () => coverRef.current.click())}
             onContextMenu={e => e.preventDefault()}
             style={{
               height: '130px',
@@ -97,7 +94,7 @@ export default function Home() {
 
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: '-36px', marginBottom: '10px' }}>
             <div
-              onClick={() => handleTap('avatar', () => avatarRef.current.click(), null)}
+              onClick={() => handleTap('avatar', () => avatarRef.current.click())}
               onContextMenu={e => e.preventDefault()}
               style={{
                 width: '72px', height: '72px',
@@ -139,14 +136,15 @@ export default function Home() {
 
         <div style={{ padding: '12px 16px 0' }}>
           <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', letterSpacing: '.06em', marginBottom: '10px' }}>功能</div>
-          <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', alignItems: 'start' }}>
 
+            {/* 兔窝 左边 */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <div
-                onClick={() => handleTap('main', () => mainRef.current.click(), null)}
+                onClick={() => handleTap('main', () => mainRef.current.click())}
                 onContextMenu={e => e.preventDefault()}
                 style={{
-                  width: '120px', height: '120px',
+                  width: '100%', aspectRatio: '1',
                   borderRadius: '20px',
                   background: mainImg ? `url(${mainImg}) center/cover` : 'rgba(255,255,255,0.08)',
                   backdropFilter: 'blur(16px)',
@@ -161,38 +159,40 @@ export default function Home() {
                 onChange={e => handleImg(e, setMainImg)} />
             </div>
 
-            <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+            {/* 右边 2x2 图标 */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
               {btns.map((btn, i) => (
                 <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <div
-                    onClick={() => handleTap(`icon${i}`, () => iconRefs[i].current.click(), null)}
+                    onClick={() => handleTap(`icon${i}`, () => iconRefs[i].current.click())}
                     onContextMenu={e => e.preventDefault()}
                     style={{
-                      width: iconSize, height: iconSize,
-                      borderRadius: '16px',
+                      width: '100%', aspectRatio: '1',
+                      borderRadius: '14px',
                       background: icons[i] ? `url(${icons[i]}) center/cover` : 'rgba(255,255,255,0.1)',
                       backdropFilter: 'blur(16px)',
                       WebkitBackdropFilter: 'blur(16px)',
                       border: '0.5px solid rgba(255,255,255,0.15)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: '24px', cursor: 'pointer', userSelect: 'none',
+                      fontSize: '22px', cursor: 'pointer', userSelect: 'none',
                     }}
                   >{!icons[i] && btn.emoji}</div>
                   <input ref={iconRefs[i]} type="file" accept="image/*" style={{ display: 'none' }}
                     onChange={e => handleIcon(e, i)} />
-                  <div style={{ height: '20px', lineHeight: '20px', marginTop: '6px', fontSize: '11px', color: 'rgba(255,255,255,0.7)' }}>{btn.label}</div>
+                  <div style={{ height: '20px', lineHeight: '20px', marginTop: '6px', fontSize: '10px', color: 'rgba(255,255,255,0.7)' }}>{btn.label}</div>
                 </div>
               ))}
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <div style={{
-                  width: iconSize, height: iconSize,
-                  borderRadius: '16px',
+                  width: '100%', aspectRatio: '1',
+                  borderRadius: '14px',
                   background: 'rgba(255,255,255,0.04)',
                   border: '0.5px dashed rgba(255,255,255,0.08)',
                 }} />
                 <div style={{ height: '20px', marginTop: '6px' }} />
               </div>
             </div>
+
           </div>
         </div>
 
