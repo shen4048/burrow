@@ -3,11 +3,15 @@ export const metadata = {
   description: 'burrow',
 }
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+}
+
 export default function RootLayout({ children }) {
   return (
     <html lang="zh">
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <style>{`
           * { box-sizing: border-box; margin: 0; padding: 0; }
           body { background: #0a0a0a; display: flex; justify-content: center; }
@@ -17,5 +21,3 @@ export default function RootLayout({ children }) {
     </html>
   )
 }
-
-
