@@ -15,8 +15,7 @@ export default function Home() {
   const handleImg = (e, setter) => {
     const file = e.target.files[0]
     if (!file) return
-    const url = URL.createObjectURL(file)
-    setter(url)
+    setter(URL.createObjectURL(file))
   }
 
   const handleIcon = (e, i) => {
@@ -94,15 +93,16 @@ export default function Home() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               {[0,1,2,3].map(i => (
                 <input key={i} placeholder="点击编辑…" style={{
-                  background: 'rgba(255,255,255,0.08)',
-                  border: '0.5px solid rgba(255,255,255,0.12)',
-                  borderRadius: '10px',
-                  padding: '8px 12px',
+                  background: 'none',
+                  border: 'none',
+                  borderBottom: '0.5px solid rgba(255,255,255,0.1)',
+                  padding: '6px 0',
                   fontSize: '12px',
                   color: 'rgba(255,255,255,0.8)',
                   outline: 'none',
                   width: '100%',
                   fontFamily: 'inherit',
+                  textAlign: 'center',
                 }} />
               ))}
             </div>
@@ -131,7 +131,7 @@ export default function Home() {
 
             <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
               {btns.map((btn, i) => (
-                <div key={i} style={{
+                <div key={i} onClick={() => iconRefs[i].current.click()} style={{
                   borderRadius: '18px',
                   background: 'rgba(255,255,255,0.1)',
                   backdropFilter: 'blur(16px)',
@@ -141,12 +141,12 @@ export default function Home() {
                   display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                   cursor: 'pointer',
                 }}>
-                  <div onClick={() => iconRefs[i].current.click()} style={{
+                  <div style={{
                     width: '38px', height: '38px',
                     borderRadius: '10px',
                     background: icons[i] ? `url(${icons[i]}) center/cover` : 'rgba(255,255,255,0.08)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: '20px', marginBottom: '6px', cursor: 'pointer',
+                    fontSize: '20px', marginBottom: '6px',
                   }}>{!icons[i] && btn.emoji}</div>
                   <input ref={iconRefs[i]} type="file" accept="image/*" style={{ display: 'none' }}
                     onChange={e => handleIcon(e, i)} />
@@ -194,7 +194,6 @@ export default function Home() {
       </div>
 
       <style>{`
-        @keyframes pulse { 0%,100%{opacity:.5} 50%{opacity:1} }
         input::placeholder { color: rgba(255,255,255,0.25); }
         input { -webkit-appearance: none; }
         * { -webkit-tap-highlight-color: transparent; }
@@ -202,4 +201,3 @@ export default function Home() {
     </main>
   )
 }
-
