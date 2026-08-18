@@ -1,7 +1,8 @@
 export default function Home() {
   return (
     <main style={{
-      maxWidth: '390px',
+      width: '100%',
+maxWidth: '390px',
       margin: '0 auto',
       background: '#111',
       minHeight: '100vh',
