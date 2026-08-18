@@ -5,12 +5,12 @@ export default function Home() {
   const [coverImg, setCoverImg] = useState(null)
   const [avatarImg, setAvatarImg] = useState(null)
   const [mainImg, setMainImg] = useState(null)
-  const [icons, setIcons] = useState([null, null, null])
+  const [icons, setIcons] = useState([null, null, null, null])
 
   const coverRef = useRef()
   const avatarRef = useRef()
   const mainRef = useRef()
-  const iconRefs = [useRef(), useRef(), useRef()]
+  const iconRefs = [useRef(), useRef(), useRef(), useRef()]
   const tapCount = useRef({})
   const tapTimers = useRef({})
 
@@ -44,6 +44,7 @@ export default function Home() {
     { label: '沈克手机', emoji: '📱' },
     { label: '流水账', emoji: '📋' },
     { label: '设置', emoji: '⚙️' },
+    { label: 'iop', emoji: '✦' },
   ]
 
   return (
@@ -136,15 +137,15 @@ export default function Home() {
 
         <div style={{ padding: '12px 16px 0' }}>
           <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', letterSpacing: '.06em', marginBottom: '10px' }}>功能</div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', alignItems: 'start' }}>
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
 
-            {/* 兔窝 左边 */}
+            {/* 兔窝 */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <div
                 onClick={() => handleTap('main', () => mainRef.current.click())}
                 onContextMenu={e => e.preventDefault()}
                 style={{
-                  width: '100%', aspectRatio: '1',
+                  width: '150px', height: '150px',
                   borderRadius: '20px',
                   background: mainImg ? `url(${mainImg}) center/cover` : 'rgba(255,255,255,0.08)',
                   backdropFilter: 'blur(16px)',
@@ -159,12 +160,12 @@ export default function Home() {
                 onChange={e => handleImg(e, setMainImg)} />
             </div>
 
-            {/* 右边 2x2 图标 */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+            {/* 四个图标 2x2 */}
+            <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
               {btns.map((btn, i) => (
                 <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <div
-                    onClick={() => handleTap(`icon${i}`, () => iconRefs[i].current.click())}
+                    onClick={() => handleTap(`icon${i}`, () => iconRefs[i].current?.click())}
                     onContextMenu={e => e.preventDefault()}
                     style={{
                       width: '100%', aspectRatio: '1',
@@ -174,23 +175,17 @@ export default function Home() {
                       WebkitBackdropFilter: 'blur(16px)',
                       border: '0.5px solid rgba(255,255,255,0.15)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: '22px', cursor: 'pointer', userSelect: 'none',
+                      fontSize: i === 3 ? '16px' : '22px',
+                      color: 'rgba(255,255,255,0.4)',
+                      cursor: i === 3 ? 'default' : 'pointer',
+                      userSelect: 'none',
                     }}
                   >{!icons[i] && btn.emoji}</div>
-                  <input ref={iconRefs[i]} type="file" accept="image/*" style={{ display: 'none' }}
-                    onChange={e => handleIcon(e, i)} />
-                  <div style={{ height: '20px', lineHeight: '20px', marginTop: '6px', fontSize: '10px', color: 'rgba(255,255,255,0.7)' }}>{btn.label}</div>
+                  {i < 3 && <input ref={iconRefs[i]} type="file" accept="image/*" style={{ display: 'none' }}
+                    onChange={e => handleIcon(e, i)} />}
+                  <div style={{ height: '20px', lineHeight: '20px', marginTop: '6px', fontSize: '10px', color: i === 3 ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.7)' }}>{btn.label}</div>
                 </div>
               ))}
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div style={{
-                  width: '100%', aspectRatio: '1',
-                  borderRadius: '14px',
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '0.5px dashed rgba(255,255,255,0.08)',
-                }} />
-                <div style={{ height: '20px', marginTop: '6px' }} />
-              </div>
             </div>
 
           </div>
