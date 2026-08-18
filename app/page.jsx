@@ -32,7 +32,7 @@ export default function Home() {
     clearTimeout(tapTimers.current[key])
     if (tapCount.current[key] >= 4) {
       tapCount.current[key] = 0
-      onQuad()
+      typeof onQuad === 'function' && onQuad()
     } else {
       tapTimers.current[key] = setTimeout(() => {
         tapCount.current[key] = 0
@@ -57,10 +57,10 @@ export default function Home() {
       overflow: 'hidden',
     }}>
 
+      {/* 背景 — 不限宽，撑满全屏 */}
       <div style={{
         position: 'fixed',
         inset: 0,
-        maxWidth: '390px',
         background: coverImg ? `url(${coverImg}) center/cover no-repeat` : '#1a1a2e',
         filter: 'brightness(0.85)',
         zIndex: 0,
@@ -78,7 +78,7 @@ export default function Home() {
           border: '0.5px solid rgba(255,255,255,0.12)',
         }}>
           <div
-            onClick={() => handleTap('cover', () => coverRef.current.click())}
+            onClick={() => handleTap('cover', () => coverRef.current?.click())}
             onContextMenu={e => e.preventDefault()}
             style={{
               height: '130px',
@@ -91,11 +91,11 @@ export default function Home() {
             {!coverImg && <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '13px' }}>连点4次换封面</span>}
           </div>
           <input ref={coverRef} type="file" accept="image/*" style={{ display: 'none' }}
-            onChange={e => handleImg(e, setCoverImg)} />
+            onChange={(e) => handleImg(e, setCoverImg)} />
 
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: '-36px', marginBottom: '10px' }}>
             <div
-              onClick={() => handleTap('avatar', () => avatarRef.current.click())}
+              onClick={() => handleTap('avatar', () => avatarRef.current?.click())}
               onContextMenu={e => e.preventDefault()}
               style={{
                 width: '72px', height: '72px',
@@ -110,7 +110,7 @@ export default function Home() {
               }}
             >{!avatarImg && '🐇'}</div>
             <input ref={avatarRef} type="file" accept="image/*" style={{ display: 'none' }}
-              onChange={e => handleImg(e, setAvatarImg)} />
+              onChange={(e) => handleImg(e, setAvatarImg)} />
           </div>
 
           <div style={{ textAlign: 'center', padding: '0 20px 20px' }}>
@@ -119,7 +119,7 @@ export default function Home() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               {[0,1,2,3].map(i => (
                 <input key={i} placeholder="点击编辑…" style={{
-                  background: 'none',
+                  background: 'transparent',
                   border: 'none',
                   borderBottom: '0.5px solid rgba(255,255,255,0.1)',
                   padding: '6px 0',
@@ -139,10 +139,9 @@ export default function Home() {
           <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', letterSpacing: '.06em', marginBottom: '10px' }}>功能</div>
           <div style={{ display: 'flex', gap: '12px', alignItems: 'stretch' }}>
 
-            {/* 兔窝 — wrapper stretch，图片flex:1 */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '140px', flexShrink: 0 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '140px', flexShrink: 0, alignSelf: 'stretch' }}>
               <div
-                onClick={() => handleTap('main', () => mainRef.current.click())}
+                onClick={() => handleTap('main', () => mainRef.current?.click())}
                 onContextMenu={e => e.preventDefault()}
                 style={{
                   width: '140px',
@@ -159,10 +158,9 @@ export default function Home() {
               >{!mainImg && '🌙'}</div>
               <div style={{ height: '18px', lineHeight: '18px', marginTop: '5px', fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>兔窝</div>
               <input ref={mainRef} type="file" accept="image/*" style={{ display: 'none' }}
-                onChange={e => handleImg(e, setMainImg)} />
+                onChange={(e) => handleImg(e, setMainImg)} />
             </div>
 
-            {/* 四个图标 2x2 固定56px */}
             <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 12px', alignContent: 'start', justifyItems: 'center' }}>
               {btns.map((btn, i) => (
                 <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -183,8 +181,10 @@ export default function Home() {
                       userSelect: 'none',
                     }}
                   >{!icons[i] && btn.emoji}</div>
-                  {!btn.deco && <input ref={iconRefs[i]} type="file" accept="image/*" style={{ display: 'none' }}
-                    onChange={e => handleIcon(e, i)} />}
+                  {!btn.deco && (
+                    <input ref={iconRefs[i]} type="file" accept="image/*" style={{ display: 'none' }}
+                      onChange={(e) => handleIcon(e, i)} />
+                  )}
                   <div style={{ height: '18px', lineHeight: '18px', marginTop: '5px', fontSize: '10px', color: btn.deco ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.7)', textAlign: 'center' }}>{btn.label}</div>
                 </div>
               ))}
