@@ -137,8 +137,7 @@ export default function Home() {
 
         <div style={{ padding: '12px 16px 0' }}>
           <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', letterSpacing: '.06em', marginBottom: '10px' }}>功能</div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', alignItems: 'end' }}>
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
 
             {/* 兔窝 */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -146,7 +145,7 @@ export default function Home() {
                 onClick={() => handleTap('main', () => mainRef.current.click())}
                 onContextMenu={e => e.preventDefault()}
                 style={{
-                  width: '100%', aspectRatio: '1',
+                  width: '140px', height: '140px',
                   borderRadius: '20px',
                   background: mainImg ? `url(${mainImg}) center/cover` : 'rgba(255,255,255,0.08)',
                   backdropFilter: 'blur(16px)',
@@ -161,34 +160,32 @@ export default function Home() {
                 onChange={e => handleImg(e, setMainImg)} />
             </div>
 
-            {/* 四个图标 2x2 */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-                {btns.map((btn, i) => (
-                  <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <div
-                      onClick={() => !btn.deco && handleTap(`icon${i}`, () => iconRefs[i].current?.click())}
-                      onContextMenu={e => e.preventDefault()}
-                      style={{
-                        width: '100%', aspectRatio: '1',
-                        borderRadius: '14px',
-                        background: icons[i] ? `url(${icons[i]}) center/cover` : 'rgba(255,255,255,0.1)',
-                        backdropFilter: 'blur(16px)',
-                        WebkitBackdropFilter: 'blur(16px)',
-                        border: '0.5px solid rgba(255,255,255,0.15)',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: btn.deco ? '14px' : '20px',
-                        color: btn.deco ? 'rgba(255,255,255,0.3)' : 'inherit',
-                        cursor: btn.deco ? 'default' : 'pointer',
-                        userSelect: 'none',
-                      }}
-                    >{!icons[i] && btn.emoji}</div>
-                    {!btn.deco && <input ref={iconRefs[i]} type="file" accept="image/*" style={{ display: 'none' }}
-                      onChange={e => handleIcon(e, i)} />}
-                    <div style={{ height: '20px', lineHeight: '20px', marginTop: '6px', fontSize: '10px', color: btn.deco ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.7)' }}>{btn.label}</div>
-                  </div>
-                ))}
-              </div>
+            {/* 四个图标 2x2 固定尺寸 */}
+            <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 12px', justifyItems: 'center' }}>
+              {btns.map((btn, i) => (
+                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <div
+                    onClick={() => !btn.deco && handleTap(`icon${i}`, () => iconRefs[i].current?.click())}
+                    onContextMenu={e => e.preventDefault()}
+                    style={{
+                      width: '56px', height: '56px',
+                      borderRadius: '14px',
+                      background: icons[i] ? `url(${icons[i]}) center/cover` : 'rgba(255,255,255,0.1)',
+                      backdropFilter: 'blur(16px)',
+                      WebkitBackdropFilter: 'blur(16px)',
+                      border: '0.5px solid rgba(255,255,255,0.15)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: btn.deco ? '14px' : '22px',
+                      color: btn.deco ? 'rgba(255,255,255,0.3)' : 'inherit',
+                      cursor: btn.deco ? 'default' : 'pointer',
+                      userSelect: 'none',
+                    }}
+                  >{!icons[i] && btn.emoji}</div>
+                  {!btn.deco && <input ref={iconRefs[i]} type="file" accept="image/*" style={{ display: 'none' }}
+                    onChange={e => handleIcon(e, i)} />}
+                  <div style={{ height: '18px', lineHeight: '18px', marginTop: '5px', fontSize: '10px', color: btn.deco ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.7)', textAlign: 'center' }}>{btn.label}</div>
+                </div>
+              ))}
             </div>
 
           </div>
