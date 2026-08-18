@@ -27,7 +27,7 @@ export default function Home() {
   }
 
   const startHold = (key, cb) => {
-    holdTimers.current[key] = setTimeout(cb, 4000)
+    holdTimers.current[key] = setTimeout(cb, 800)
   }
 
   const cancelHold = (key) => {
@@ -75,6 +75,7 @@ export default function Home() {
             onTouchEnd={() => cancelHold('cover')}
             onMouseDown={() => startHold('cover', () => coverRef.current.click())}
             onMouseUp={() => cancelHold('cover')}
+            onContextMenu={e => e.preventDefault()}
             style={{
               height: '130px',
               background: coverImg ? `url(${coverImg}) center/cover` : 'linear-gradient(160deg,#2a2a4a,#0a0a1a)',
@@ -94,6 +95,7 @@ export default function Home() {
               onTouchEnd={() => cancelHold('avatar')}
               onMouseDown={() => startHold('avatar', () => avatarRef.current.click())}
               onMouseUp={() => cancelHold('avatar')}
+              onContextMenu={e => e.preventDefault()}
               style={{
                 width: '72px', height: '72px',
                 borderRadius: '50%',
@@ -142,6 +144,7 @@ export default function Home() {
                 onTouchEnd={() => cancelHold('main')}
                 onMouseDown={() => startHold('main', () => mainRef.current.click())}
                 onMouseUp={() => cancelHold('main')}
+                onContextMenu={e => e.preventDefault()}
                 style={{
                   width: '152px', height: '152px',
                   borderRadius: '20px',
@@ -153,19 +156,20 @@ export default function Home() {
                   fontSize: '44px', cursor: 'pointer', userSelect: 'none',
                 }}
               >{!mainImg && '🌙'}</div>
-              <div style={{ padding: '6px 0 0', fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>兔窝</div>
+              <div style={{ height: '20px', lineHeight: '20px', marginTop: '6px', fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>兔窝</div>
               <input ref={mainRef} type="file" accept="image/*" style={{ display: 'none' }}
                 onChange={e => handleImg(e, setMainImg)} />
             </div>
 
             <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
               {btns.map((btn, i) => (
-                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0' }}>
                   <div
                     onTouchStart={() => startHold(`icon${i}`, () => iconRefs[i].current.click())}
                     onTouchEnd={() => cancelHold(`icon${i}`)}
                     onMouseDown={() => startHold(`icon${i}`, () => iconRefs[i].current.click())}
                     onMouseUp={() => cancelHold(`icon${i}`)}
+                    onContextMenu={e => e.preventDefault()}
                     style={{
                       width: '100%', aspectRatio: '1',
                       borderRadius: '18px',
@@ -179,17 +183,17 @@ export default function Home() {
                   >{!icons[i] && btn.emoji}</div>
                   <input ref={iconRefs[i]} type="file" accept="image/*" style={{ display: 'none' }}
                     onChange={e => handleIcon(e, i)} />
-                  <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.7)' }}>{btn.label}</div>
+                  <div style={{ height: '20px', lineHeight: '20px', marginTop: '6px', fontSize: '11px', color: 'rgba(255,255,255,0.7)' }}>{btn.label}</div>
                 </div>
               ))}
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <div style={{
                   width: '100%', aspectRatio: '1',
                   borderRadius: '18px',
                   background: 'rgba(255,255,255,0.04)',
                   border: '0.5px dashed rgba(255,255,255,0.08)',
                 }} />
-                <div style={{ fontSize: '11px', color: 'transparent' }}>空</div>
+                <div style={{ height: '20px', marginTop: '6px' }} />
               </div>
             </div>
           </div>
