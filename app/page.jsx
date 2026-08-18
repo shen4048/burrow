@@ -111,7 +111,8 @@ export default function Home() {
 
         <div style={{ padding: '12px 16px 0' }}>
           <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', letterSpacing: '.06em', marginBottom: '10px' }}>功能</div>
-          <div style={{ display: 'flex', gap: '10px' }}>
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+
             <div onClick={() => mainRef.current.click()} style={{
               width: '152px', flexShrink: 0,
               borderRadius: '20px', overflow: 'hidden',
@@ -131,39 +132,35 @@ export default function Home() {
 
             <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
               {btns.map((btn, i) => (
-                <div key={i} onClick={() => iconRefs[i].current.click()} style={{
-                  borderRadius: '18px',
-                  background: 'rgba(255,255,255,0.1)',
-                  backdropFilter: 'blur(16px)',
-                  WebkitBackdropFilter: 'blur(16px)',
-                  border: '0.5px solid rgba(255,255,255,0.15)',
-                  aspectRatio: '1',
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                  cursor: 'pointer',
-                }}>
-                  <div style={{
-                    width: '38px', height: '38px',
-                    borderRadius: '10px',
-                    background: icons[i] ? `url(${icons[i]}) center/cover` : 'rgba(255,255,255,0.08)',
+                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                  <div onClick={() => iconRefs[i].current.click()} style={{
+                    width: '100%',
+                    aspectRatio: '1',
+                    borderRadius: '18px',
+                    background: icons[i] ? `url(${icons[i]}) center/cover` : 'rgba(255,255,255,0.1)',
+                    backdropFilter: 'blur(16px)',
+                    WebkitBackdropFilter: 'blur(16px)',
+                    border: '0.5px solid rgba(255,255,255,0.15)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: '20px', marginBottom: '6px',
+                    fontSize: '28px',
+                    cursor: 'pointer',
                   }}>{!icons[i] && btn.emoji}</div>
                   <input ref={iconRefs[i]} type="file" accept="image/*" style={{ display: 'none' }}
                     onChange={e => handleIcon(e, i)} />
-                  <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.7)' }}>{btn.label}</div>
+                  <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.7)' }}>{btn.label}</div>
                 </div>
               ))}
               <div style={{
+                aspectRatio: '1',
                 borderRadius: '18px',
                 background: 'rgba(255,255,255,0.04)',
                 border: '0.5px dashed rgba(255,255,255,0.08)',
-                aspectRatio: '1',
               }} />
             </div>
           </div>
         </div>
 
-        <div style={{ padding: '12px 16px 40px', marginTop: '8px' }}>
+        <div style={{ padding: '16px 16px 40px', marginTop: '8px' }}>
           <div style={{
             borderRadius: '20px',
             background: 'rgba(255,255,255,0.1)',
