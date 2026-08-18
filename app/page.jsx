@@ -11,7 +11,8 @@ export default function Home() {
   const avatarRef = useRef()
   const mainRef = useRef()
   const iconRefs = [useRef(), useRef(), useRef()]
-  const holdTimers = useRef({})
+  const tapCount = useRef({})
+  const tapTimers = useRef({})
 
   const handleImg = (e, setter) => {
     const file = e.target.files[0]
@@ -26,12 +27,18 @@ export default function Home() {
     setIcons(prev => prev.map((v, j) => j === i ? url : v))
   }
 
-  const startHold = (key, cb) => {
-    holdTimers.current[key] = setTimeout(cb, 800)
-  }
-
-  const cancelHold = (key) => {
-    clearTimeout(holdTimers.current[key])
+  const handleTap = (key, onQuad, onSingle) => {
+    tapCount.current[key] = (tapCount.current[key] || 0) + 1
+    clearTimeout(tapTimers.current[key])
+    if (tapCount.current[key] >= 4) {
+      tapCount.current[key] = 0
+      onQuad()
+    } else {
+      tapTimers.current[key] = setTimeout(() => {
+        if (tapCount.current[key] === 1) onSingle?.()
+        tapCount.current[key] = 0
+      }, 400)
+    }
   }
 
   const btns = [
@@ -39,6 +46,8 @@ export default function Home() {
     { label: '流水账', emoji: '📋' },
     { label: '设置', emoji: '⚙️' },
   ]
+
+  const iconSize = '68px'
 
   return (
     <main style={{
@@ -71,10 +80,7 @@ export default function Home() {
           border: '0.5px solid rgba(255,255,255,0.12)',
         }}>
           <div
-            onTouchStart={() => startHold('cover', () => coverRef.current.click())}
-            onTouchEnd={() => cancelHold('cover')}
-            onMouseDown={() => startHold('cover', () => coverRef.current.click())}
-            onMouseUp={() => cancelHold('cover')}
+            onClick={() => handleTap('cover', () => coverRef.current.click(), null)}
             onContextMenu={e => e.preventDefault()}
             style={{
               height: '130px',
@@ -84,17 +90,14 @@ export default function Home() {
               userSelect: 'none',
             }}
           >
-            {!coverImg && <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '13px' }}>长按换封面</span>}
+            {!coverImg && <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '13px' }}>连点4次换封面</span>}
           </div>
           <input ref={coverRef} type="file" accept="image/*" style={{ display: 'none' }}
             onChange={e => handleImg(e, setCoverImg)} />
 
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: '-36px', marginBottom: '10px' }}>
             <div
-              onTouchStart={() => startHold('avatar', () => avatarRef.current.click())}
-              onTouchEnd={() => cancelHold('avatar')}
-              onMouseDown={() => startHold('avatar', () => avatarRef.current.click())}
-              onMouseUp={() => cancelHold('avatar')}
+              onClick={() => handleTap('avatar', () => avatarRef.current.click(), null)}
               onContextMenu={e => e.preventDefault()}
               style={{
                 width: '72px', height: '72px',
@@ -136,24 +139,21 @@ export default function Home() {
 
         <div style={{ padding: '12px 16px 0' }}>
           <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', letterSpacing: '.06em', marginBottom: '10px' }}>功能</div>
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+          <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
 
-            <div style={{ width: '152px', flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <div
-                onTouchStart={() => startHold('main', () => mainRef.current.click())}
-                onTouchEnd={() => cancelHold('main')}
-                onMouseDown={() => startHold('main', () => mainRef.current.click())}
-                onMouseUp={() => cancelHold('main')}
+                onClick={() => handleTap('main', () => mainRef.current.click(), null)}
                 onContextMenu={e => e.preventDefault()}
                 style={{
-                  width: '152px', height: '152px',
+                  width: '120px', height: '120px',
                   borderRadius: '20px',
                   background: mainImg ? `url(${mainImg}) center/cover` : 'rgba(255,255,255,0.08)',
                   backdropFilter: 'blur(16px)',
                   WebkitBackdropFilter: 'blur(16px)',
                   border: '0.5px solid rgba(255,255,255,0.12)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '44px', cursor: 'pointer', userSelect: 'none',
+                  fontSize: '36px', cursor: 'pointer', userSelect: 'none',
                 }}
               >{!mainImg && '🌙'}</div>
               <div style={{ height: '20px', lineHeight: '20px', marginTop: '6px', fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>兔窝</div>
@@ -161,24 +161,21 @@ export default function Home() {
                 onChange={e => handleImg(e, setMainImg)} />
             </div>
 
-            <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+            <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
               {btns.map((btn, i) => (
-                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0' }}>
+                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <div
-                    onTouchStart={() => startHold(`icon${i}`, () => iconRefs[i].current.click())}
-                    onTouchEnd={() => cancelHold(`icon${i}`)}
-                    onMouseDown={() => startHold(`icon${i}`, () => iconRefs[i].current.click())}
-                    onMouseUp={() => cancelHold(`icon${i}`)}
+                    onClick={() => handleTap(`icon${i}`, () => iconRefs[i].current.click(), null)}
                     onContextMenu={e => e.preventDefault()}
                     style={{
-                      width: '100%', aspectRatio: '1',
-                      borderRadius: '18px',
+                      width: iconSize, height: iconSize,
+                      borderRadius: '16px',
                       background: icons[i] ? `url(${icons[i]}) center/cover` : 'rgba(255,255,255,0.1)',
                       backdropFilter: 'blur(16px)',
                       WebkitBackdropFilter: 'blur(16px)',
                       border: '0.5px solid rgba(255,255,255,0.15)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: '28px', cursor: 'pointer', userSelect: 'none',
+                      fontSize: '24px', cursor: 'pointer', userSelect: 'none',
                     }}
                   >{!icons[i] && btn.emoji}</div>
                   <input ref={iconRefs[i]} type="file" accept="image/*" style={{ display: 'none' }}
@@ -188,8 +185,8 @@ export default function Home() {
               ))}
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <div style={{
-                  width: '100%', aspectRatio: '1',
-                  borderRadius: '18px',
+                  width: iconSize, height: iconSize,
+                  borderRadius: '16px',
                   background: 'rgba(255,255,255,0.04)',
                   border: '0.5px dashed rgba(255,255,255,0.08)',
                 }} />
