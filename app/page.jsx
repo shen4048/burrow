@@ -137,15 +137,17 @@ export default function Home() {
 
         <div style={{ padding: '12px 16px 0' }}>
           <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', letterSpacing: '.06em', marginBottom: '10px' }}>功能</div>
-          <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'stretch' }}>
 
-            {/* 兔窝 */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            {/* 兔窝 — wrapper stretch，图片flex:1 */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '140px', flexShrink: 0 }}>
               <div
                 onClick={() => handleTap('main', () => mainRef.current.click())}
                 onContextMenu={e => e.preventDefault()}
                 style={{
-                  width: '140px', height: '140px',
+                  width: '140px',
+                  flex: 1,
+                  minHeight: '120px',
                   borderRadius: '20px',
                   background: mainImg ? `url(${mainImg}) center/cover` : 'rgba(255,255,255,0.08)',
                   backdropFilter: 'blur(16px)',
@@ -155,13 +157,13 @@ export default function Home() {
                   fontSize: '36px', cursor: 'pointer', userSelect: 'none',
                 }}
               >{!mainImg && '🌙'}</div>
-              <div style={{ height: '20px', lineHeight: '20px', marginTop: '6px', fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>兔窝</div>
+              <div style={{ height: '18px', lineHeight: '18px', marginTop: '5px', fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>兔窝</div>
               <input ref={mainRef} type="file" accept="image/*" style={{ display: 'none' }}
                 onChange={e => handleImg(e, setMainImg)} />
             </div>
 
-            {/* 四个图标 2x2 固定尺寸 */}
-            <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 12px', justifyItems: 'center' }}>
+            {/* 四个图标 2x2 固定56px */}
+            <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 12px', alignContent: 'start', justifyItems: 'center' }}>
               {btns.map((btn, i) => (
                 <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <div
