@@ -11,6 +11,7 @@ export default function Home() {
   const avatarRef = useRef()
   const mainRef = useRef()
   const iconRefs = [useRef(), useRef(), useRef()]
+  const holdTimers = useRef({})
 
   const handleImg = (e, setter) => {
     const file = e.target.files[0]
@@ -23,6 +24,14 @@ export default function Home() {
     if (!file) return
     const url = URL.createObjectURL(file)
     setIcons(prev => prev.map((v, j) => j === i ? url : v))
+  }
+
+  const startHold = (key, cb) => {
+    holdTimers.current[key] = setTimeout(cb, 4000)
+  }
+
+  const cancelHold = (key) => {
+    clearTimeout(holdTimers.current[key])
   }
 
   const btns = [
@@ -61,28 +70,42 @@ export default function Home() {
           WebkitBackdropFilter: 'blur(20px)',
           border: '0.5px solid rgba(255,255,255,0.12)',
         }}>
-          <div onClick={() => coverRef.current.click()} style={{
-            height: '130px',
-            background: coverImg ? `url(${coverImg}) center/cover` : 'linear-gradient(160deg,#2a2a4a,#0a0a1a)',
-            cursor: 'pointer',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}>
-            {!coverImg && <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '13px' }}>点击换封面</span>}
+          <div
+            onTouchStart={() => startHold('cover', () => coverRef.current.click())}
+            onTouchEnd={() => cancelHold('cover')}
+            onMouseDown={() => startHold('cover', () => coverRef.current.click())}
+            onMouseUp={() => cancelHold('cover')}
+            style={{
+              height: '130px',
+              background: coverImg ? `url(${coverImg}) center/cover` : 'linear-gradient(160deg,#2a2a4a,#0a0a1a)',
+              cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              userSelect: 'none',
+            }}
+          >
+            {!coverImg && <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '13px' }}>长按换封面</span>}
           </div>
           <input ref={coverRef} type="file" accept="image/*" style={{ display: 'none' }}
             onChange={e => handleImg(e, setCoverImg)} />
 
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: '-36px', marginBottom: '10px' }}>
-            <div onClick={() => avatarRef.current.click()} style={{
-              width: '72px', height: '72px',
-              borderRadius: '50%',
-              border: '3px solid rgba(255,255,255,0.25)',
-              background: avatarImg ? `url(${avatarImg}) center/cover` : 'rgba(255,255,255,0.1)',
-              cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: '32px',
-              backdropFilter: 'blur(10px)',
-            }}>{!avatarImg && '🐇'}</div>
+            <div
+              onTouchStart={() => startHold('avatar', () => avatarRef.current.click())}
+              onTouchEnd={() => cancelHold('avatar')}
+              onMouseDown={() => startHold('avatar', () => avatarRef.current.click())}
+              onMouseUp={() => cancelHold('avatar')}
+              style={{
+                width: '72px', height: '72px',
+                borderRadius: '50%',
+                border: '3px solid rgba(255,255,255,0.25)',
+                background: avatarImg ? `url(${avatarImg}) center/cover` : 'rgba(255,255,255,0.1)',
+                cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '32px',
+                backdropFilter: 'blur(10px)',
+                userSelect: 'none',
+              }}
+            >{!avatarImg && '🐇'}</div>
             <input ref={avatarRef} type="file" accept="image/*" style={{ display: 'none' }}
               onChange={e => handleImg(e, setAvatarImg)} />
           </div>
@@ -113,49 +136,61 @@ export default function Home() {
           <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', letterSpacing: '.06em', marginBottom: '10px' }}>功能</div>
           <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
 
-            <div onClick={() => mainRef.current.click()} style={{
-              width: '152px', flexShrink: 0,
-              borderRadius: '20px', overflow: 'hidden',
-              background: mainImg ? `url(${mainImg}) center/cover` : 'rgba(255,255,255,0.08)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-              border: '0.5px solid rgba(255,255,255,0.12)',
-              cursor: 'pointer',
-            }}>
-              <div style={{ height: '152px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '44px' }}>
-                {!mainImg && '🌙'}
-              </div>
-              <div style={{ padding: '8px 12px 12px', fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>兔窝</div>
+            <div style={{ width: '152px', flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div
+                onTouchStart={() => startHold('main', () => mainRef.current.click())}
+                onTouchEnd={() => cancelHold('main')}
+                onMouseDown={() => startHold('main', () => mainRef.current.click())}
+                onMouseUp={() => cancelHold('main')}
+                style={{
+                  width: '152px', height: '152px',
+                  borderRadius: '20px',
+                  background: mainImg ? `url(${mainImg}) center/cover` : 'rgba(255,255,255,0.08)',
+                  backdropFilter: 'blur(16px)',
+                  WebkitBackdropFilter: 'blur(16px)',
+                  border: '0.5px solid rgba(255,255,255,0.12)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '44px', cursor: 'pointer', userSelect: 'none',
+                }}
+              >{!mainImg && '🌙'}</div>
+              <div style={{ padding: '6px 0 0', fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>兔窝</div>
+              <input ref={mainRef} type="file" accept="image/*" style={{ display: 'none' }}
+                onChange={e => handleImg(e, setMainImg)} />
             </div>
-            <input ref={mainRef} type="file" accept="image/*" style={{ display: 'none' }}
-              onChange={e => handleImg(e, setMainImg)} />
 
             <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
               {btns.map((btn, i) => (
                 <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-                  <div onClick={() => iconRefs[i].current.click()} style={{
-                    width: '100%',
-                    aspectRatio: '1',
-                    borderRadius: '18px',
-                    background: icons[i] ? `url(${icons[i]}) center/cover` : 'rgba(255,255,255,0.1)',
-                    backdropFilter: 'blur(16px)',
-                    WebkitBackdropFilter: 'blur(16px)',
-                    border: '0.5px solid rgba(255,255,255,0.15)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: '28px',
-                    cursor: 'pointer',
-                  }}>{!icons[i] && btn.emoji}</div>
+                  <div
+                    onTouchStart={() => startHold(`icon${i}`, () => iconRefs[i].current.click())}
+                    onTouchEnd={() => cancelHold(`icon${i}`)}
+                    onMouseDown={() => startHold(`icon${i}`, () => iconRefs[i].current.click())}
+                    onMouseUp={() => cancelHold(`icon${i}`)}
+                    style={{
+                      width: '100%', aspectRatio: '1',
+                      borderRadius: '18px',
+                      background: icons[i] ? `url(${icons[i]}) center/cover` : 'rgba(255,255,255,0.1)',
+                      backdropFilter: 'blur(16px)',
+                      WebkitBackdropFilter: 'blur(16px)',
+                      border: '0.5px solid rgba(255,255,255,0.15)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: '28px', cursor: 'pointer', userSelect: 'none',
+                    }}
+                  >{!icons[i] && btn.emoji}</div>
                   <input ref={iconRefs[i]} type="file" accept="image/*" style={{ display: 'none' }}
                     onChange={e => handleIcon(e, i)} />
                   <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.7)' }}>{btn.label}</div>
                 </div>
               ))}
-              <div style={{
-                aspectRatio: '1',
-                borderRadius: '18px',
-                background: 'rgba(255,255,255,0.04)',
-                border: '0.5px dashed rgba(255,255,255,0.08)',
-              }} />
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                <div style={{
+                  width: '100%', aspectRatio: '1',
+                  borderRadius: '18px',
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '0.5px dashed rgba(255,255,255,0.08)',
+                }} />
+                <div style={{ fontSize: '11px', color: 'transparent' }}>空</div>
+              </div>
             </div>
           </div>
         </div>
